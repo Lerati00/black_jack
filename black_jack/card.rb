@@ -6,12 +6,17 @@ class Card
   attr_accessor :type
 
   ACE_CORRECT = 10
+  CLOSED_CARD = <<~CLOSED
+     __ 
+    | /|
+    |/ |
+  CLOSED
 
   def initialize(rank, suit)
     @rank  = rank
     @suit  = suit
     @point = initialize_point
-    @type  = :close
+    @type  = :open
   end
 
   def initialize_point
@@ -23,13 +28,31 @@ class Card
     return 11        if (rank_ & %w[A]).any?
   end
 
+  def ace?
+    @point == 11
+  end
+
+  def close
+    @type = :close
+    self
+  end
+
+  def open
+    @type = :open
+    self
+  end
+
   def to_s
-    rank_ = rank[1].nil? ? rank + " " : rank
-    drawing_card = <<~DRAWING
-       __ 
-      |#{rank_}|
-      |_#{suit}|
-    DRAWING
+    if type == :open
+      rank_ = rank[1].nil? ? rank + " " : rank
+      drawing_card = <<~DRAWING
+         __ 
+        |#{rank_}|
+        |_#{suit}|
+      DRAWING
+    elsif type == :close
+      CLOSED_CARD
+    end
   end
 
 end

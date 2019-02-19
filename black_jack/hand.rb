@@ -1,18 +1,34 @@
 class Hand
-  attr_reader :cards
+  attr_reader :cards 
+
+  MAX_POINT = 21
 
   def initialize
     @cards = []
   end
 
   def take_card(card)
-    raise unless card.is_a?(Card)
     @cards << card
     card
   end
 
   def score
-    cards.sum(&:point) || 0
+    sum = cards.sum(&:point) || 0
+    @cards.each do |card|
+      if sum > MAX_POINT && card.ace?
+        sum -= Card::ACE_CORRECT
+        break if sum <= MAX_POINT
+      end
+    end
+    sum
+  end
+
+  def close
+    cards.each { |card| card.close}
+  end
+
+  def open
+    cards.each { |card| card.open}
   end
   
   def to_s

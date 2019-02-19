@@ -8,10 +8,10 @@ class Deck
   
   def initialize
     @cards ||= []
-    create_new_card_deck
+    create_new_deck
   end
 
-  def create_new_card_deck
+  def create_new_deck
     SUITS.each do |suit| 
       RANKS.each do |rank|
         @cards << Card.new(rank, suit)
@@ -32,7 +32,7 @@ class Deck
   end
 
   def top_card
-    card_deck.pop
+    cards.pop
   end
 
   def to_s
