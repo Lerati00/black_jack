@@ -1,5 +1,5 @@
 class Hand
-  attr_reader :cards 
+  attr_reader :cards
 
   MAX_POINT = 21
 
@@ -28,15 +28,15 @@ class Hand
   end
 
   def close
-    cards.each { |card| card.close }
+    cards.each(&:close)
   end
 
   def open
-    cards.each { |card| card.open }
+    cards.each(&:open)
   end
-  
+
   def to_s
-    drawing_hand = ["", "", ""]
+    drawing_hand = ['', '', '']
     cards.each do |card|
       3.times do |index|
         drawing_hand[index] = drawing_hand[index].chomp + card.to_s.lines[index]

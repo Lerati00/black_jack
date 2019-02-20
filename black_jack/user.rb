@@ -1,2 +1,2 @@
-class User < Player 
+class User < Player
 end

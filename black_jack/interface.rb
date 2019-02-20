@@ -11,10 +11,12 @@ class Interface
   START_OVER = "\nЖелаете начать сначала"
   YOU_WIN = "Вы выиграли"
   YOU_LOSE = "Вы проиграли"
+  PLAYER = "Player"
+  DEALER = "Dealer"
 
   def create_name
     puts SET_USER_NAME
-    (name = gets.chomp).empty? ? "Player" : name.capitalize
+    (name = gets.chomp).empty? ? PLAYER : name.capitalize
   end
 
   def game_interface(user, dealer, bank)

@@ -1,15 +1,15 @@
-require_relative "card.rb"
+require_relative 'card.rb'
 
 class Deck
   attr_reader :cards
-  
+
   def initialize
-    @cards ||= []
+    @cards = []
     create_new_deck
   end
 
   def create_new_deck
-    Card::SUITS.each do |suit| 
+    Card::SUITS.each do |suit|
       Card::RANKS.each do |rank|
         @cards << Card.new(rank, suit)
       end
@@ -30,10 +30,3 @@ class Deck
     drawing_cards
   end
 end
-
-
-
-
-  
-
-

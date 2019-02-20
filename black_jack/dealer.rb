@@ -4,5 +4,4 @@ class Dealer < Player
   def to_little?
     score < DEALLER_RULE
   end
-
 end

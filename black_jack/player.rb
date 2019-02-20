@@ -56,5 +56,4 @@ class Player
   def to_s
     "#{name}: #{bank}\tScore: #{score}"
   end
-  
 end

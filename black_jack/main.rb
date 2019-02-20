@@ -1,19 +1,19 @@
-require_relative "card.rb"
-require_relative "hand.rb"
-require_relative "deck.rb"
-require_relative "player.rb"
-require_relative "user.rb"
-require_relative "dealer.rb"
-require_relative "bank.rb"
-require_relative "interface.rb"
+require_relative 'card.rb'
+require_relative 'hand.rb'
+require_relative 'deck.rb'
+require_relative 'player.rb'
+require_relative 'user.rb'
+require_relative 'dealer.rb'
+require_relative 'bank.rb'
+require_relative 'interface.rb'
 
 class Main
   def initialize
     @interface = Interface.new
     @bank   = Bank.new
-    @dealer = Dealer.new("Dealer")
+    @dealer = Dealer.new(Interface::DEALER)
     @deck   = Deck.new
-    @user   = User.new(@interface.create_name)  
+    @user   = User.new(@interface.create_name)
   end
 
   def run
@@ -22,10 +22,10 @@ class Main
       user_game
       dealer_game
       end_party
-      
-      if user.lose? || dealer.lose? 
-        @interface.start_over? ? reset_bank : break 
-      else 
+
+      if user.lose? || dealer.lose?
+        @interface.start_over? ? reset_bank : break
+      else
         break unless @interface.continue?
       end
     end
@@ -34,7 +34,7 @@ class Main
   protected
 
   attr_reader :bank,
-              :user, 
+              :user,
               :dealer,
               :deck
 
@@ -53,13 +53,13 @@ class Main
     bank.withdraw_bet(user, dealer)
   end
 
-  def starting_hand(player) 
+  def starting_hand(player)
     player.give_card(deck.top_card)
-    player.give_card(deck.top_card)  
+    player.give_card(deck.top_card)
   end
 
   def pull_the_card
-    user.give_card(deck.top_card)  if @interface.pull_the_card?
+    user.give_card(deck.top_card) if @interface.pull_the_card?
   end
 
   def user_game
@@ -70,7 +70,7 @@ class Main
   end
 
   def dealer_game
-    dealer.open_card 
+    dealer.open_card
     dealer.give_card(deck.top_card) while dealer.to_little?
   end
 
@@ -91,10 +91,12 @@ class Main
 
   def winner
     return if (dealer.overload? && user.overload?) || user.score == dealer.score
-    return dealer  if user.overload? || (user.score < dealer.score && !dealer.overload?)
-    return user    
-  end
+    if user.overload? || (user.score < dealer.score && !dealer.overload?)
+      return dealer
+    end
 
+    user
+  end
 end
 
 Main.new.run
