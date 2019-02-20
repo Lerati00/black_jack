@@ -14,21 +14,25 @@ class Hand
 
   def score
     sum = cards.sum(&:point) || 0
-    @cards.each do |card|
-      if sum > MAX_POINT && card.ace?
-        sum -= Card::ACE_CORRECT
-        break if sum <= MAX_POINT
+    ace_correction(sum)
+  end
+
+  def ace_correction(point)
+    cards.each do |card|
+      if point > MAX_POINT && card.ace?
+        point -= Card::ACE_CORRECT
+        break if point <= MAX_POINT
       end
     end
-    sum
+    point
   end
 
   def close
-    cards.each { |card| card.close}
+    cards.each { |card| card.close }
   end
 
   def open
-    cards.each { |card| card.open}
+    cards.each { |card| card.open }
   end
   
   def to_s
