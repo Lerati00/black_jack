@@ -41,11 +41,7 @@ class Interface
   def pull_the_card
     puts PULL_THE_CARD
     choice = gets.to_i until choice&.between?(1, 3)
-    case choice
-    when 1 then :pull_card
-    when 2 then :skip
-    when 3 then :open
-    end
+    [:pull_card, :skip, :open][choice -1]
   end
 
   def continue?
