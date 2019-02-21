@@ -2,6 +2,7 @@ class Hand
   attr_reader :cards
 
   MAX_POINT = 21
+  CARDS_LIMIT = 3
 
   def initialize
     @cards = []
@@ -12,19 +13,17 @@ class Hand
     card
   end
 
+  def maximum_cards?
+    cards.size == CARDS_LIMIT
+  end
+
+  def size
+    cards.size
+  end
+
   def score
     sum = cards.sum(&:point) || 0
     ace_correction(sum)
-  end
-
-  def ace_correction(point)
-    cards.each do |card|
-      if point > MAX_POINT && card.ace?
-        point -= Card::ACE_CORRECT
-        break if point <= MAX_POINT
-      end
-    end
-    point
   end
 
   def close
@@ -43,5 +42,17 @@ class Hand
       end
     end
     drawing_hand
+  end
+
+  private
+
+  def ace_correction(point)
+    cards.each do |card|
+      if point > MAX_POINT && card.ace?
+        point -= Card::ACE_CORRECT
+        break if point <= MAX_POINT
+      end
+    end
+    point
   end
 end

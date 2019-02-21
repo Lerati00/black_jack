@@ -21,6 +21,10 @@ class Player
     hand.take_card(card)
   end
 
+  def maximum_cards?
+    hand.maximum_cards?
+  end
+
   def overload?
     score > Hand::MAX_POINT
   end
@@ -56,4 +60,10 @@ class Player
   def to_s
     "#{name}: #{bank}\tScore: #{score}"
   end
+
+  
+
+  protected
+
+  attr_reader :end_turn
 end

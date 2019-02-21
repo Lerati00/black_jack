@@ -4,11 +4,11 @@ class Deck
   attr_reader :cards
 
   def initialize
-    @cards = []
     create_new_deck
   end
 
   def create_new_deck
+    @cards = []
     Card::SUITS.each do |suit|
       Card::RANKS.each do |rank|
         @cards << Card.new(rank, suit)

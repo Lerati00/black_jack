@@ -19,8 +19,11 @@ class Main
   def run
     loop do
       start_party
-      user_game
-      dealer_game
+      loop do
+        user_game
+        dealer_game
+        break if end_turn?
+      end
       end_party
 
       if user.lose? || dealer.lose?
@@ -36,7 +39,13 @@ class Main
   attr_reader :bank,
               :user,
               :dealer,
-              :deck
+              :deck,
+              :end_turn,
+              :skip
+
+  def end_turn?
+    end_turn ? end_turn : user.maximum_cards? 
+  end
 
   def reset_bank
     user.reset_bank
@@ -44,11 +53,14 @@ class Main
   end
 
   def start_party
+    @end_turn = false
+    @skip = false
+    deck.create_new_deck
     deck.mix_deck
 
     starting_hand(user)
     starting_hand(dealer)
-    dealer.close_card
+    user.open_card
 
     bank.withdraw_bet(user, dealer)
   end
@@ -59,19 +71,19 @@ class Main
   end
 
   def pull_the_card
-    user.give_card(deck.top_card) if @interface.pull_the_card?
+    choice = @interface.pull_the_card
+    user.give_card(deck.top_card.open) if choice == :pull_card
+    @end_turn = choice == :pull_card || choice == :open
   end
 
   def user_game
-    loop do
-      @interface.game_interface(user, dealer, bank)
-      break if pull_the_card.nil? || user.overload?
-    end
+    @interface.game_interface(user, dealer, bank)
+    pull_the_card
   end
 
   def dealer_game
-    dealer.open_card
-    dealer.give_card(deck.top_card) while dealer.to_little?
+    dealer.give_card(deck.top_card) while dealer.to_little? && !dealer.maximum_cards?
+    dealer.open_card if end_turn?
   end
 
   def end_party
@@ -84,18 +96,16 @@ class Main
   end
 
   def reset_party
-    deck.create_new_deck
     user.reset_hand
     dealer.reset_hand
   end
 
   def winner
-    return if (dealer.overload? && user.overload?) || user.score == dealer.score
-    if user.overload? || (user.score < dealer.score && !dealer.overload?)
-      return dealer
-    end
-
-    user
+    return if dealer.overload? && user.overload?
+    return if user.score == dealer.score
+    return user if dealer.overload?
+    return dealer if user.overload?
+    [user, dealer].max_by(&:score)
   end
 end
 
