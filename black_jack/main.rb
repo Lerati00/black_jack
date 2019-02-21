@@ -40,8 +40,7 @@ class Main
               :user,
               :dealer,
               :deck,
-              :end_turn,
-              :skip
+              :end_turn
 
   def end_turn?
     end_turn ? end_turn : user.maximum_cards? 
@@ -54,7 +53,7 @@ class Main
 
   def start_party
     @end_turn = false
-    @skip = false
+
     deck.create_new_deck
     deck.mix_deck
 
