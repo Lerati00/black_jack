@@ -1,17 +1,10 @@
 class Interface
   SET_USER_NAME = 'Введите имя пользователя'
-  PULL_THE_CARD = <<~CHOISE
-      ------------------ ----------------- ---------------
-    //1 - Тянуть карту // 2 - Пропустить // 3 - Открыть  //
-  CHOISE
-  SKIP = <<~SKIP
-     
-   
-  SKIP
-  OPEN = <<~OPEN
-     
-    
-  OPEN
+  ACTIONS = [
+    { type: :pull_card, text: "Тянуть карту" },
+    { type: :skip, text: "Пропустить" },
+    { type: :open, text: "Открыть" }
+  ] 
   WIN_BANK = " выиграл банк"
   CONTINUE = "\nЖелаете продолжить"
   DRAW = "Ничья"
@@ -38,10 +31,13 @@ class Interface
     puts player.nil? ? DRAW : player.name + WIN_BANK
   end
 
-  def pull_the_card
-    puts PULL_THE_CARD
-    choice = gets.to_i until choice&.between?(1, 3)
-    [:pull_card, :skip, :open][choice -1]
+  def pull_the_card(delete_skip = false)
+    actions_ = ACTIONS.clone
+    actions_.delete_if { |action| action[:type] == :skip } if delete_skip
+    size = actions_.size
+    puts actions(actions_)
+    choice = gets.to_i until choice&.between?(1, size)
+    actions_[choice -1][:type]
   end
 
   def continue?
@@ -70,5 +66,19 @@ class Interface
 
   def print_hand(player)
     player.hand.to_s
+  end
+
+  private
+
+  def actions(actions_ = ACTIONS)
+    actions = []
+    actions_.each_with_index do |action, index|
+      string = " "
+      size = action[:text].size + 3
+      (1..size).each { string += "-" }
+      string += " \n/#{index + 1} #{action[:text]}/"
+      actions << string
+    end
+    actions
   end
 end

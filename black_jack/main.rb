@@ -40,7 +40,8 @@ class Main
               :user,
               :dealer,
               :deck,
-              :end_turn
+              :end_turn,
+              :skip
 
   def end_turn?
     end_turn ? end_turn : user.maximum_cards? 
@@ -52,6 +53,7 @@ class Main
   end
 
   def start_party
+    @skip = false
     @end_turn = false
 
     deck.create_new_deck
@@ -70,9 +72,10 @@ class Main
   end
 
   def pull_the_card
-    choice = @interface.pull_the_card
+    choice = @interface.pull_the_card(skip)
     user.give_card(deck.top_card.open) if choice == :pull_card
     @end_turn = choice == :pull_card || choice == :open
+    @skip = :skip == choice
   end
 
   def user_game
